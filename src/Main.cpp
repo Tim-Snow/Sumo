@@ -1,5 +1,5 @@
 #include "Game.h"
-
+//test
 int main(int argc, char* argv[])
 {
 	//WINDOW PROPERTIES
