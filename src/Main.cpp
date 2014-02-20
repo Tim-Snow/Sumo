@@ -1,18 +1,26 @@
-#include "Game.h"
-//test
-int main(int argc, char* argv[])
-{
-	//WINDOW PROPERTIES
-	const char gameTitle[] = "Sumo Game";
-	const int w = 1024;
-	const int h = 768;
-	//CREATE WINDOW AND INIT OPENGL CONTEXT
-	Game * game = new Game();
-	if(!game->init(gameTitle, w, h))
-		return -1;
-	//RUN GAME LOOP
-	game->loop();
-	delete game;
+#include "Window.h"
+
+int main(int argc, char **argv){
+
+	const char GAMETITLE[] = "Sumo Game";
+	const int WIDTH = 1024;
+	const int HEIGHT = 768;
+
+	Window * window = new Window();
+
+	window->initContext(GAMETITLE, WIDTH, HEIGHT);
+	window->initOpenGL();
+
+	SDL_Event event;
+	while(window->running){
+		while(SDL_PollEvent(&event)!=0){
+			window->checkInput(event);
+			window->render();
+			SDL_Delay(10);
+		}
+	}
+
+	window->deInit();
 
 	return 0;
 }
