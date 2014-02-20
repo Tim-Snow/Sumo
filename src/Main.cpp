@@ -16,6 +16,7 @@ int main(int argc, char **argv){
 		while(SDL_PollEvent(&event)!=0){
 			window->checkInput(event);
 			window->render();
+			window->update();
 			SDL_Delay(10);
 		}
 	}
