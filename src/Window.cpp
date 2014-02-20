@@ -1,5 +1,4 @@
 #include "Window.h"
-using namespace std;
 
 bool Window::initContext(const char NAME[], int WIDTH, int HEIGHT){
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -19,52 +18,50 @@ bool Window::initContext(const char NAME[], int WIDTH, int HEIGHT){
 }
 
 bool Window::initOpenGL(){
-	glewExperimental=true; // Needed in core profile
-	
+	glewExperimental=true;
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return 1;
 	}
-
 	glGenVertexArrays(1, &VertArrayID);
 	glBindVertexArray(VertArrayID);
-
-	static const GLfloat g_vertex_buffer_data[] = {
-	-1.0f, -1.0f, 0.0f,
-	1.0f, -1.0f, 0.0f,
-	0.0f,  1.0f, 0.0f,
-	};
-	
-	glClearColor(0,1,1,1);
-	glClearDepth(1.0f);
-
-	glViewport(0, 0, 640, 480);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, 640, 480, 0, 1, -1);
-	glMatrixMode(GL_MODELVIEW);
-	glEnable(GL_TEXTURE_2D);
-	glLoadIdentity();
-
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	glClearColor(0,0,0,1);
+	glClearDepth(1.0f);
+	
+	programID = shader.LoadShader("vertShader.vert","fragShader.frag");
+	glUseProgram(programID);
+
+	Projection = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	View       = lookAt(vec3(4,3,3), vec3(0,0,0), vec3(0,1,0));
+	Model      = mat4(1.0f);
+	MVP        = Projection * View * Model;
+
+	
 
 	return 0;
 }
 
 void Window::render(){
+	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
+	
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(0,3,GL_FLOAT,	GL_FALSE, 0, (void*)0);
-
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	glDrawArrays(GL_TRIANGLES, 0, 12*3);
 	glDisableVertexAttribArray(0);
 
+	player.drawPlayer(1);
+
     SDL_GL_SwapWindow(window);
+}
+
+void Window::update(){
 }
 
 void Window::checkInput(SDL_Event &event){
