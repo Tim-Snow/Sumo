@@ -1,23 +1,53 @@
 #include "Player.h"
 
-void Player::drawPlayer(int size){
-	static const GLfloat g_vertex_buffer_data[] = {
-		-size, -size, -size, -size, -size, size, -size, size, size,
-		size, size, -size, -size, -size, -size, -size, size, -size,
-		size, -size, size, -size, -size, -size, size, -size, -size,
+Player::Player(){
+	xVel = 0.0;
+	Player(0, 0, 0);
+}
 
-		size, size, -size, size, -size, -size, -size, -size, -size,
-		-size, -size, -size, -size, size, size, -size, size, -size,
-		size, -size, size, -size, -size, size, -size, -size, -size,
+Player::Player(float x, float y, float z){
+	num_triangles = 12;
+	num_vertices = 8;
 
-		-size, size, size, -size, -size, size, size, -size, size,
-		size, size, size, size, -size, -size, size, size, -size,
-		size, -size, -size, size, size, size, size, -size, size,
+	Vertices = new Vector3f[num_vertices]; // three points per vertex
+	Indexes = new GLushort[num_triangles * 3];
+	Colours = new RGBA[num_vertices];
 
-		size, size, size, size, size, -size, -size, size, -size,
-		size, size, size, -size, size, -size, -size, size, size,
-		size, size, size, -size, size, size, size, -size, size
-	};
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	buildBufferArrays();
+	buildColourArray();
 
+	bbox.reset();
+	bbox = shared_ptr<BoundingBox>(new BoundingBox(Point3(x, y, z), 1.0, 1.0, 1.0));
+
+	makeResources();
+}
+
+void Player::setXVel(float f){
+	xVel += f;
+}
+
+void Player::setYVel(float f){
+	yVel += f;
+}
+
+void Player::buildColourArray(){
+
+	Colours[0] = RGBA(1.0f, 0.0f, 0.0f, 1.0f);
+	Colours[1] = RGBA(1.0f, 0.0f, 0.0f, 1.0f);
+	Colours[2] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
+	Colours[3] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
+
+	Colours[4] = RGBA(1.0f, 0.0f, 0.0f, 1.0f);
+	Colours[5] = RGBA(1.0f, 0.0f, 0.0f, 1.0f);
+	Colours[6] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
+	Colours[7] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
+}
+
+void Player::update(){
+	bbox.reset();
+	bbox = shared_ptr<BoundingBox>(new BoundingBox(Point3(xVel, 1, yVel), 1.0, 1.0, 1.0));
+}
+
+void Player::draw(){
+	CubeObject::draw();
 }
