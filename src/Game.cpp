@@ -72,6 +72,9 @@ void Game::loop(){
 			if (event.type == SDL_KEYDOWN){
 				camera = Camera::getInstance().getCameraM();
 				switch (event.key.keysym.sym){
+				case SDLK_ESCAPE:
+					running = false;
+					break;
 				case SDLK_LEFT:
 					player->setXVel(-1);
 					break;
@@ -82,8 +85,11 @@ void Game::loop(){
 					player->setYVel(1);
 					break;
 				case SDLK_DOWN:
-					//Camera::getInstance().setCamera(camera * Matrix4::translation(Vector3(0.0, 0.0, 1.0)));
+					//Camera::getInstance().setCamera(camera * Matrix4::rotationY(5.0/180));
 					player->setYVel(-1);
+					break;
+				case SDLK_SPACE:
+					player->jumping = true;
 					break;
 				default:
 					break;

@@ -8,15 +8,19 @@ public:
 	Player();
 	Player(float x, float y, float z);
 
-	float xVel, yVel;
+	float xVel, yVel, height;
+	int maxHeight;
 	void setXVel(float f);
 	void setYVel(float f);
 
+	void jump();
+	bool jumping;
 	virtual void buildColourArray();
 	virtual void update();
 	virtual void draw();
 protected:
 private:
+	bool falling;
 };
 
 #endif // PLAYER_H_
