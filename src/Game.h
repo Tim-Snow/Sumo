@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "CubeObject.h"
 #include "GameObject.h"
+#include "LevelCube.h"
 #include "Camera.h"
 
 using namespace std;

@@ -55,6 +55,7 @@ public:
 	GameObject();
 	~GameObject();
 
+	bool collidesWith(GameObject & a);
 	virtual void draw();
 	virtual void update() = 0;
 
@@ -68,6 +69,7 @@ protected:
 	GLushort * Indexes;
 	
 	string vertShaderStr, fragShaderStr;
+
 
 	void compileShaders();
 	void makeResources();

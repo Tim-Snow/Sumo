@@ -12,8 +12,8 @@ void GameObject::compileShaders(){
 	fragShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 	//get shader src
-	vertShaderStr = ReadFile("shaders/vshader.v");
-	fragShaderStr = ReadFile("shaders/fshader.f");
+	vertShaderStr = ReadFile("vshader.v");
+	fragShaderStr = ReadFile("fshader.f");
 
 	const char* vertShaderSrc = vertShaderStr.c_str();
 	const char* fragShaderSrc = fragShaderStr.c_str();
@@ -34,6 +34,10 @@ void GameObject::compileShaders(){
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragShader);
+}
+
+bool GameObject::collidesWith(GameObject & a) {
+	return bbox->collidesWith((*a.bbox));
 }
 
 void GameObject::draw(){

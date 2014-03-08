@@ -21,16 +21,16 @@ bool Game::init(int w, int h){
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	player = shared_ptr<Player>(new Player(1, 3, 0));
+	player = shared_ptr<Player>(new Player(0, 3, 0));
 	objects.push_back(player);
 
 	for (int i = 0; i < 10; i++){
 		for (int j = 0; j < 10; j++){
-			//if (i == 9 || j == 9 || i == 0 || j == 0){
-			//	objects.push_back(shared_ptr<CubeObject>(new CubeObject(i, 1, j)));
-			//} else {
-				objects.push_back(shared_ptr<CubeObject>(new CubeObject(i, 0, j)));
-			//}
+			if (i == 9 || j == 9 || i == 0 || j == 0){
+				objects.push_back(shared_ptr<LevelCube>(new LevelCube(i, 1, j)));
+			} else {
+			objects.push_back(shared_ptr<LevelCube>(new LevelCube(i, 0, j)));
+			}
 		}
 	}
 
@@ -55,6 +55,13 @@ void Game::display(){
 		it->update();
 	}
 
+	for (auto i : objects) {
+		if ((i != player) && i->collidesWith(*player)) {
+			player->noGrav();
+			cout << "Player is colliding with another object" << endl;
+		}
+	}
+
 	for (auto it : objects) {
 		it->draw();
 	}
@@ -76,17 +83,17 @@ void Game::loop(){
 					running = false;
 					break;
 				case SDLK_LEFT:
-					player->setXVel(-1);
+					player->setXVel(-0.1);
 					break;
 				case SDLK_RIGHT:
-					player->setXVel(1);
+					player->setXVel(0.1);
 					break;
 				case SDLK_UP:
-					player->setYVel(1);
+					player->setYVel(0.1);
 					break;
 				case SDLK_DOWN:
 					//Camera::getInstance().setCamera(camera * Matrix4::rotationY(5.0/180));
-					player->setYVel(-1);
+					player->setYVel(-0.1);
 					break;
 				case SDLK_SPACE:
 					player->jumping = true;
