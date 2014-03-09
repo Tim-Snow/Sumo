@@ -8,6 +8,7 @@ Player::Player(float x, float y, float z){
 	num_triangles = 12;
 	num_vertices = 8;
 
+	jumping = falling = false;
 	gravity = true;
 	position = new Point3(x, y, z);
 	velocity = new Vector3(0.0, 0.0, 0.0);
@@ -38,6 +39,16 @@ void Player::buildColourArray(){
 }
 
 void Player::jump(){
+	if (!jumping){
+		jumping = true;
+		oldHeight = position->getY();
+		maxHeight = oldHeight + 2.0;
+	}
+}
+
+void Player::landed(){
+	falling = false;
+	jumping = false;
 }
 
 void Player::move(){
@@ -46,6 +57,14 @@ void Player::move(){
 	position->setY(newPosition.getY());
 	position->setZ(newPosition.getZ());
 
+	if (jumping && !falling){
+		if (position->getY() < maxHeight){
+			velocity->setY(0.2);
+		} else {
+			gravity = true;
+			falling = true;
+		}
+	}
 	newPosition = *position + *velocity;
 }
 
@@ -79,6 +98,7 @@ void Player::update(){
 
 	move();
 	bbox = shared_ptr<BoundingBox>(new BoundingBox(newPosition, 1.0, 1.0, 1.0));
+	gravity = true;
 }
 
 void Player::draw(){

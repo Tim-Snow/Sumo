@@ -21,14 +21,15 @@ bool Game::init(int w, int h){
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	player = shared_ptr<Player>(new Player(0, 3, 0)); //x offset, height, y/z offset
+	player = shared_ptr<Player>(new Player(3, 3, 3)); //x offset, height, y/z offset
 	objects.push_back(player);
 
 	for (int i = 0; i < 10; i++){
 		for (int j = 0; j < 10; j++){
-			objects.push_back(shared_ptr<LevelCube>(new LevelCube(i, 0, j)));
+				objects.push_back(shared_ptr<LevelCube>(new LevelCube(i, 0, j)));
 		}
 	}
+	objects.push_back(shared_ptr<LevelCube>(new LevelCube(5, 1, 5)));
 
 	camera = Camera::getInstance().getCameraM();
 	Camera::getInstance().lookAt(Point3(0.0, 10.0, -10.0), Point3(0.0, -10.0, 10.0), Vector3(0.0, 1.0, 0.0));
@@ -49,16 +50,15 @@ void Game::display(){
 
 	for (auto it : objects) {
 		it->update();
-		player->applyGravity();
+	}
+	for (auto it : objects) {
 		if ((it != player) && it->collidesWith(*player)) {
-			player->noGravity();
+			player->landed(); //resets jump variables to allow another jump
+			player->noGravity(); //this should only be used for FLOOR collisions
 			cout << "Player is colliding with another object" << endl;
 		}
 	}
 
-
-
-	
 	for (auto it : objects) {
 		it->draw();
 	}
@@ -110,7 +110,7 @@ void Game::loop(){
 					player->moveZ(-0.1);
 					break;
 				case SDLK_SPACE:
-
+					player->jump();
 					break;
 				default:
 					break;
