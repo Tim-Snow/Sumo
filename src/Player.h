@@ -8,22 +8,26 @@ public:
 	Player();
 	Player(float x, float y, float z);
 
-	float xPos, yPos, zPos;
-	int maxHeight;
-	void setXVel(float f);
-	void setYVel(float f);
-	bool gravity, jumping;
+	bool gravity;
 
 	void jump();
-	void noGrav();
-	void grav();
+	void applyGravity();
+	void noGravity();
+
+	void moveX(double d);
+	void moveZ(double d);
+	void moveBack();
 
 	virtual void buildColourArray();
 	virtual void update();
 	virtual void draw();
 protected:
 private:
-	bool falling;
+	Point3 newPosition;
+	Point3 * position;
+	Vector3 * velocity;
+
+	void move();
 };
 
 #endif // PLAYER_H_

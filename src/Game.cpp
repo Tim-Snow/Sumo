@@ -21,16 +21,12 @@ bool Game::init(int w, int h){
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	player = shared_ptr<Player>(new Player(0, 3, 0));
+	player = shared_ptr<Player>(new Player(0, 3, 0)); //x offset, height, y/z offset
 	objects.push_back(player);
 
 	for (int i = 0; i < 10; i++){
 		for (int j = 0; j < 10; j++){
-			if (i == 9 || j == 9 || i == 0 || j == 0){
-				objects.push_back(shared_ptr<LevelCube>(new LevelCube(i, 1, j)));
-			} else {
 			objects.push_back(shared_ptr<LevelCube>(new LevelCube(i, 0, j)));
-			}
 		}
 	}
 
@@ -53,15 +49,16 @@ void Game::display(){
 
 	for (auto it : objects) {
 		it->update();
-	}
-
-	for (auto i : objects) {
-		if ((i != player) && i->collidesWith(*player)) {
-			player->noGrav();
+		player->applyGravity();
+		if ((it != player) && it->collidesWith(*player)) {
+			player->noGravity();
 			cout << "Player is colliding with another object" << endl;
 		}
 	}
 
+
+
+	
 	for (auto it : objects) {
 		it->draw();
 	}
@@ -75,7 +72,25 @@ void Game::loop(){
 			if (event.type == SDL_QUIT){
 				running = false;
 			}
-				
+			if (event.type == SDL_KEYUP){
+				switch (event.key.keysym.sym){
+				case SDLK_LEFT:
+					player->moveX(0);
+					break;
+				case SDLK_RIGHT:
+					player->moveX(0);
+					break;
+				case SDLK_UP:
+					player->moveZ(0);
+					break;
+				case SDLK_DOWN:
+					player->moveZ(0);
+					break;
+				default:
+					break;
+				}
+			}
+			
 			if (event.type == SDL_KEYDOWN){
 				camera = Camera::getInstance().getCameraM();
 				switch (event.key.keysym.sym){
@@ -83,20 +98,19 @@ void Game::loop(){
 					running = false;
 					break;
 				case SDLK_LEFT:
-					player->setXVel(-0.1);
+					player->moveX(-0.1);
 					break;
 				case SDLK_RIGHT:
-					player->setXVel(0.1);
+					player->moveX(0.1);
 					break;
 				case SDLK_UP:
-					player->setYVel(0.1);
+					player->moveZ(0.1);
 					break;
 				case SDLK_DOWN:
-					//Camera::getInstance().setCamera(camera * Matrix4::rotationY(5.0/180));
-					player->setYVel(-0.1);
+					player->moveZ(-0.1);
 					break;
 				case SDLK_SPACE:
-					player->jumping = true;
+
 					break;
 				default:
 					break;
@@ -104,7 +118,6 @@ void Game::loop(){
 			}
 		}
 		display();
-		
 	}
 }
 

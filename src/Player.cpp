@@ -7,17 +7,13 @@ Player::Player(){
 Player::Player(float x, float y, float z){
 	num_triangles = 12;
 	num_vertices = 8;
-	
-	xPos = x;
-	yPos = z;
-	zPos = y;
-	maxHeight = y+1.5;
 
-	jumping = false;
-	falling = false;
 	gravity = true;
+	position = new Point3(x, y, z);
+	velocity = new Vector3(0.0, 0.0, 0.0);
+	newPosition = *position + *velocity;
 
-	Vertices = new Vector3f[num_vertices]; // three points per vertex
+	Vertices = new Vector3f[num_vertices];
 	Indexes = new GLushort[num_triangles * 3];
 	Colours = new RGBA[num_vertices];
 
@@ -25,34 +21,8 @@ Player::Player(float x, float y, float z){
 	buildColourArray();
 
 	bbox.reset();
-	bbox = shared_ptr<BoundingBox>(new BoundingBox(Point3(x, y, z), 1.0, 1.0, 1.0));
+	bbox = shared_ptr<BoundingBox>(new BoundingBox(*position, 1.0, 1.0, 1.0));
 	makeResources();
-}
-
-void Player::jump(){
-	if (jumping && !falling){
-		if (zPos < maxHeight){
-			zPos += 0.1;
-			falling = false;
-			gravity = false;
-		}
-		else {
-			falling = true;
-		}
-	}
-	if (falling){
-		gravity = true;
-		jumping = false;
-		falling = false;
-	}
-}
-
-void Player::setXVel(float f){
-	xPos += f;
-}
-
-void Player::setYVel(float f){
-	yPos += f;
 }
 
 void Player::buildColourArray(){
@@ -67,22 +37,48 @@ void Player::buildColourArray(){
 	Colours[7] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
 }
 
-void Player::noGrav(){
+void Player::jump(){
+}
+
+void Player::move(){
+	applyGravity();
+	position->setX(newPosition.getX());
+	position->setY(newPosition.getY());
+	position->setZ(newPosition.getZ());
+
+	newPosition = *position + *velocity;
+}
+
+void Player::moveBack(){
+	newPosition = *position;
+}
+
+void Player::noGravity(){
 	gravity = false;
 }
 
-void Player::grav(){
-	gravity = true;
+void Player::applyGravity(){
+	if (gravity){
+		velocity->setY(-0.1);
+	}
+	else {
+		velocity->setY(0);
+	}
+}
+
+void Player::moveX(double d){
+	velocity->setX(d);
+}
+
+void Player::moveZ(double d){
+	velocity->setZ(d);
 }
 
 void Player::update(){
 	bbox.reset();
-	jump();
-	if (gravity){
-		zPos -= 0.1;
-	}
-	bbox = shared_ptr<BoundingBox>(new BoundingBox(Point3(xPos, zPos, yPos), 1.0, 1.0, 1.0));
-	gravity = true;
+
+	move();
+	bbox = shared_ptr<BoundingBox>(new BoundingBox(newPosition, 1.0, 1.0, 1.0));
 }
 
 void Player::draw(){
