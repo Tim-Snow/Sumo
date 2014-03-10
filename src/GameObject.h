@@ -1,4 +1,5 @@
 #include <GL/glew.h>
+#include <SDL_image.h>
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -59,28 +60,24 @@ public:
 	bool collidesWithWall(GameObject & a);
 	virtual void draw();
 	virtual void update() = 0;
-
 protected:
-	GLuint vertexBuffer, indexBuffer, colourBuffer;
-	GLuint vertexShader, fragShader, program;
-	GLint position_attrib, tx_uniform, colour_attrib;
-
 	Vector3f * Vertices;
 	RGBA * Colours;
 	GLushort * Indexes;
 	
-	string vertShaderStr, fragShaderStr;
-
-
 	void compileShaders();
 	void makeResources();
 
-	int num_triangles;
-	int num_vertices;
+	int num_triangles, num_vertices;
 
 	shared_ptr<BoundingBox> bbox;
 private:
 	string ReadFile(const char* path);
+	string vertShaderStr, fragShaderStr;
+
+	GLuint vertexBuffer, indexBuffer, colourBuffer, textureBuffer;
+	GLuint vertexShader, fragShader, program;
+	GLint position_attrib, tx_uniform, colour_attrib, texture_attrib;
 };
 
 #endif // GAMEOBJECT_H_

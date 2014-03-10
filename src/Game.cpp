@@ -38,10 +38,9 @@ bool Game::init(int w, int h){
 	objects.push_back(shared_ptr<LevelCube>(new LevelCube(6, 1, 4)));
 
 	camera = Camera::getInstance().getCameraM();
-	Camera::getInstance().lookAt(Point3(0.0, 10.0, -10.0), Point3(0.0, -10.0, 10.0), Vector3(0.0, 1.0, 0.0));
+	Camera::getInstance().lookAt(Point3(0.0, 0.0, -10.0), Point3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0));
 	Camera::getInstance().setCamera(camera * Matrix4::translation(Vector3(-4.5, -3.5, 6.0)));
 	display();
-
 	return 0;
 }
 
@@ -53,6 +52,7 @@ void Game::display(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	for (auto it : objects) {
 		it->update();
@@ -60,14 +60,11 @@ void Game::display(){
 	for (auto it : objects) {
 		if ((it != player) && it->collidesWith(*player)) {
 			player->landed(); //resets jump variables to allow another jump
-			player->noGravity();//this is for FLOOR collisions
-			cout << "Player is colliding with floor" << endl;
+			player->noGravity();
 		}
 
 		if ((it != player) && it->collidesWithWall(*player)) {
-
-			player->moveBack(); // WALL collisions
-			cout << "Player is colliding with wall" << endl;
+			player->moveBack(); 
 		}
 	}
 

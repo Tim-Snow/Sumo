@@ -10,9 +10,9 @@ Player::Player(float x, float y, float z){
 
 	jumping = falling = false;
 	gravity = true;
-	position = new Point3(x, y, z);
-	velocity = new Vector3(0.0, 0.0, 0.0);
-	newPosition = *position + *velocity;
+	position = Point3(x, y, z);
+	velocity = Vector3(0.0, 0.0, 0.0);
+	newPosition = position + velocity;
 
 	Vertices = new Vector3f[num_vertices];
 	Indexes = new GLushort[num_triangles * 3];
@@ -22,7 +22,7 @@ Player::Player(float x, float y, float z){
 	buildColourArray();
 
 	bbox.reset();
-	bbox = shared_ptr<BoundingBox>(new BoundingBox(*position, 1.0, 1.0, 1.0));
+	bbox = shared_ptr<BoundingBox>(new BoundingBox(position, 1.0, 1.0, 1.0));
 	makeResources();
 }
 
@@ -41,7 +41,7 @@ void Player::buildColourArray(){
 void Player::jump(){
 	if (!jumping){
 		jumping = true;
-		oldHeight = position->getY();
+		oldHeight = position.getY();
 		maxHeight = oldHeight + 2.0;
 	}
 }
@@ -53,23 +53,23 @@ void Player::landed(){
 
 void Player::move(){
 	applyGravity();
-	position->setX(newPosition.getX());
-	position->setY(newPosition.getY());
-	position->setZ(newPosition.getZ());
+	position.setX(newPosition.getX());
+	position.setY(newPosition.getY());
+	position.setZ(newPosition.getZ());
 
 	if (jumping && !falling){
-		if (position->getY() < maxHeight){
-			velocity->setY(0.2);
+		if (position.getY() < maxHeight){
+			velocity.setY(0.2);
 		} else {
 			gravity = true;
 			falling = true;
 		}
 	}
-	newPosition = *position + *velocity;
+	newPosition = position + velocity;
 }
 
 void Player::moveBack(){
-	newPosition = *position;
+	newPosition = position;
 }
 
 void Player::noGravity(){
@@ -78,19 +78,19 @@ void Player::noGravity(){
 
 void Player::applyGravity(){
 	if (gravity){
-		velocity->setY(-0.1);
+		velocity.setY(-0.1);
 	}
 	else {
-		velocity->setY(0);
+		velocity.setY(0);
 	}
 }
 
 void Player::moveX(double d){
-	velocity->setX(d);
+	velocity.setX(d);
 }
 
 void Player::moveZ(double d){
-	velocity->setZ(d);
+	velocity.setZ(d);
 }
 
 void Player::update(){

@@ -21,9 +21,8 @@ public:
 	virtual void draw();
 protected:
 private:
-	Point3 newPosition;
-	Point3 * position;
-	Vector3 * velocity;
+	Point3 position, newPosition;
+	Vector3 velocity;
 	bool falling, gravity, jumping;
 	float oldHeight, maxHeight;
 
