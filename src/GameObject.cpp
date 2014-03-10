@@ -40,8 +40,12 @@ bool GameObject::collidesWith(GameObject & a) {
 	return bbox->collidesWith((*a.bbox));
 }
 
-void GameObject::draw(){
+bool GameObject::collidesWithWall(GameObject & a) {
+	return bbox->collidesWithWall((*a.bbox));
+}
 
+
+void GameObject::draw(){
 	glUseProgram(program);
 
 	Vector4 tx = Camera::getInstance().getCameraM() * *(bbox->getCentre());
@@ -85,7 +89,6 @@ string GameObject::ReadFile(const char* path) {
 }
 
 void GameObject::makeResources(){
-
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);

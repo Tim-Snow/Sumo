@@ -8,12 +8,8 @@ public:
 	Player();
 	Player(float x, float y, float z);
 
-	bool gravity, jumping;
-	float oldHeight, maxHeight;
-
 	void jump();
 	void landed();
-	void applyGravity();
 	void noGravity();
 
 	void moveX(double d);
@@ -28,9 +24,13 @@ private:
 	Point3 newPosition;
 	Point3 * position;
 	Vector3 * velocity;
+	bool falling, gravity, jumping;
+	float oldHeight, maxHeight;
 
+	void applyGravity();
 	void move();
-	bool falling;
+
+	
 };
 
 #endif // PLAYER_H_

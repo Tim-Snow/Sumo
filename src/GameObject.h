@@ -56,6 +56,7 @@ public:
 	~GameObject();
 
 	bool collidesWith(GameObject & a);
+	bool collidesWithWall(GameObject & a);
 	virtual void draw();
 	virtual void update() = 0;
 
