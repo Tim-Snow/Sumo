@@ -28,8 +28,6 @@ private:
 
 	void applyGravity();
 	void move();
-
-	
 };
 
 #endif // PLAYER_H_

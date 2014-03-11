@@ -8,7 +8,7 @@ LevelCube::LevelCube(float x, float y, float z){
 	num_triangles = 12;
 	num_vertices = 8;
 
-	Vertices = new Vector3f[num_vertices]; // three points per vertex
+	Vertices = new Vertex[num_vertices];
 	Indexes = new GLushort[num_triangles * 3];
 	Colours = new RGBA[num_vertices];
 

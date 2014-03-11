@@ -14,6 +14,21 @@
 using namespace std;
 using namespace Vectormath::Aos;
 
+struct Vector2f
+{
+	float x;
+	float y;
+
+	Vector2f()
+	{
+	}
+
+	Vector2f(float _x, float _y)
+	{
+		x = _x;
+		y = _y;
+	}
+};
 struct Vector3f
 {
 	float x;
@@ -50,6 +65,15 @@ struct RGBA
 		a = _a;
 	}
 };
+struct Vertex{
+	Vector3f position;
+	Vector3f texture;
+	Vertex(){}
+	Vertex(Vector3f pos, Vector3f tex){
+		position = pos;
+		texture = tex;
+	}
+};
 
 class GameObject{
 public:
@@ -61,7 +85,7 @@ public:
 	virtual void draw();
 	virtual void update() = 0;
 protected:
-	Vector3f * Vertices;
+	Vertex * Vertices;
 	RGBA * Colours;
 	GLushort * Indexes;
 	
@@ -73,6 +97,7 @@ protected:
 	shared_ptr<BoundingBox> bbox;
 private:
 	string ReadFile(const char* path);
+	GLuint loadTexture(const char* path);
 	string vertShaderStr, fragShaderStr;
 
 	GLuint vertexBuffer, indexBuffer, colourBuffer, textureBuffer;

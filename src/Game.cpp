@@ -24,24 +24,36 @@ bool Game::init(int w, int h){
 	player = shared_ptr<Player>(new Player(3, 5, 3)); //x offset, height, y/z offset
 	objects.push_back(player);
 
-	for (int i = 0; i < 10; i++){
-		for (int j = 0; j < 10; j++){
-				objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 0, i)));
-		}
-	}
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(5, 2, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 1, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 1, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(5, 1, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 1, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 1, 6)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(6, 1, 4)));
+	createLevel();
 
 	camera = Camera::getInstance().getCameraM();
-	Camera::getInstance().lookAt(Point3(0.0, 0.0, -10.0), Point3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0));
+	Camera::getInstance().lookAt(Point3(1.0, 0.0, 0.0), Point3(-15.0, -5.0, -15.0), Vector3(0.0, 1.0, 0.0));
 	Camera::getInstance().setCamera(camera * Matrix4::translation(Vector3(-4.5, -3.5, 6.0)));
 	display();
 	return 0;
+}
+
+void Game::createLevel(){
+	for (int i = 0; i < 10; i++){
+		for (int j = 0; j < 10; j++){
+			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 0, i)));
+		}
+	}
+
+	for (int i = 2; i < 8; i++){
+		for (int j = 2; j < 8; j++){
+			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 1, i)));
+		}
+	}
+
+	for (int i = 3; i < 7; i++){
+		for (int j = 3; j < 7; j++){
+			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 2, i)));
+		}
+	}
+	objects.push_back(shared_ptr<LevelCube>(new LevelCube(5, 3, 5)));
+	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 3, 5)));
+
 }
 
 void Game::cameraLoop(){

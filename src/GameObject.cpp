@@ -21,11 +21,22 @@ void GameObject::compileShaders(){
 	//compile vertex shader
 	glShaderSource(vertexShader, 1, &vertShaderSrc, NULL);
 	glCompileShader(vertexShader);
+	GLint vShaderok;
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vShaderok);
+	if (!vShaderok) {
+		cerr << "Failed to compile vertexShader" << " with error code " << vShaderok << endl;
+		glDeleteShader(vertexShader);
+	}
 
 	//compile fragment shader
 	glShaderSource(fragShader, 1, &fragShaderSrc, NULL);
 	glCompileShader(fragShader);
-
+	GLint fShaderok;
+	glGetShaderiv(fragShader, GL_COMPILE_STATUS, &fShaderok);
+	if (!fShaderok) {
+		cerr << "Failed to compile vertexShader" << " with error code " << fShaderok << endl;
+		glDeleteShader(fragShader);
+	}
 	//link the program
 	program = glCreateProgram();
 	glAttachShader(program, vertexShader);
@@ -50,22 +61,23 @@ void GameObject::draw(){
 
 	Vector4 tx = Camera::getInstance().getCameraM() * *(bbox->getCentre());
 	float tx_unpacked[] = { tx.getX(), tx.getY(), tx.getZ(), tx.getW() };
-
 	glUniform4fv(tx_uniform, 1, tx_unpacked);
-
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-
 	glEnableVertexAttribArray(position_attrib);
-	glEnableVertexAttribArray(colour_attrib);
-	glVertexAttribPointer(position_attrib, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(texture_attrib);
+	glVertexAttribPointer(position_attrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glVertexAttribPointer(texture_attrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12);
 	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
+	glEnableVertexAttribArray(colour_attrib);
 	glVertexAttribPointer(colour_attrib, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	glDrawElements(GL_TRIANGLES, 3 * this->num_triangles, GL_UNSIGNED_SHORT, (GLvoid*)0);
 
+	glDisableVertexAttribArray(texture_attrib);
 	glDisableVertexAttribArray(colour_attrib);
 	glDisableVertexAttribArray(position_attrib);
+	glDisableVertexAttribArray(tx_uniform);
 }
 
 
@@ -95,7 +107,7 @@ void GameObject::makeResources(){
 
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f)* this->num_vertices, Vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)* this->num_vertices, Vertices, GL_STATIC_DRAW);
 
 	glGenBuffers(1, &colourBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
@@ -104,10 +116,26 @@ void GameObject::makeResources(){
 	glGenBuffers(1, &indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLushort)* this->num_triangles, Indexes, GL_STATIC_DRAW);
+	
+	glUniform1i(texture_attrib, 0);
+	textureBuffer = loadTexture("player_texture.bmp");
 
 	compileShaders();
-
+	
+	texture_attrib = glGetAttribLocation(program, "texture");
 	position_attrib = glGetAttribLocation(program, "position");
 	colour_attrib = glGetAttribLocation(program, "colour");
 	tx_uniform = glGetUniformLocation(program, "tx");
+}
+
+GLuint GameObject::loadTexture(const char *path){
+	GLuint texture;
+	SDL_Surface * image = SDL_LoadBMP(path);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	return texture;
 }

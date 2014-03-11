@@ -31,6 +31,7 @@ private:
 
 	void cameraLoop();
 	void display();
+	void createLevel();
 
 	Matrix4 camera;
 	bool running;

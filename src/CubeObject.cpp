@@ -8,7 +8,7 @@ CubeObject::CubeObject(float x, float y, float z){
 	num_triangles = 12;
 	num_vertices = 8;
 
-	Vertices = new Vector3f[num_vertices];
+	Vertices = new Vertex[num_vertices];
 	Indexes = new GLushort[num_triangles * 3];
 	Colours = new RGBA[num_vertices];
 
@@ -35,15 +35,15 @@ void CubeObject::buildColourArray(){
 }
 
 void CubeObject::buildBufferArrays(){
-	Vertices[0] = Vector3f(-0.5f, -0.5f, 0.5f);
-	Vertices[1] = Vector3f(0.5f, -0.5f, 0.5f);
-	Vertices[2] = Vector3f(0.5f, 0.5f, 0.5f);
-	Vertices[3] = Vector3f(-0.5f, 0.5f, 0.5f);
+	Vertices[0] = Vertex(Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, 0.0f, 0.0f));
+	Vertices[1] = Vertex(Vector3f(0.5f, -0.5f, 0.5f), Vector3f(1.0f, 0.0f, 0.0f));
+	Vertices[2] = Vertex(Vector3f(0.5f, 0.5f, 0.5f), Vector3f(1.0f, 1.0f, 0.0f));
+	Vertices[3] = Vertex(Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(0.0f, 1.0f, 0.0f));
 
-	Vertices[4] = Vector3f(-0.5f, -0.5f, -0.5f);
-	Vertices[5] = Vector3f(0.5f, -0.5f, -0.5f);
-	Vertices[6] = Vector3f(0.5f, 0.5f, -0.5f);
-	Vertices[7] = Vector3f(-0.5f, 0.5f, -0.5f);
+	Vertices[4] = Vertex(Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(0.0f, 0.0f, 1.0f));
+	Vertices[5] = Vertex(Vector3f(0.5f, -0.5f, -0.5f), Vector3f(1.0f, 0.0f, 1.0f));
+	Vertices[6] = Vertex(Vector3f(0.5f, 0.5f, -0.5f), Vector3f(1.0f, 1.0f, 1.0f));
+	Vertices[7] = Vertex(Vector3f(-0.5f, 0.5f, -0.5f), Vector3f(0.0f, 1.0f, 1.0f));
 
 	Indexes[0] = 0;	Indexes[1] = 1;	Indexes[2] = 2;
 	Indexes[3] = 2;	Indexes[4] = 3;	Indexes[5] = 0;

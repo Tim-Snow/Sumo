@@ -14,7 +14,7 @@ Player::Player(float x, float y, float z){
 	velocity = Vector3(0.0, 0.0, 0.0);
 	newPosition = position + velocity;
 
-	Vertices = new Vector3f[num_vertices];
+	Vertices = new Vertex[num_vertices];
 	Indexes = new GLushort[num_triangles * 3];
 	Colours = new RGBA[num_vertices];
 
@@ -59,7 +59,7 @@ void Player::move(){
 
 	if (jumping && !falling){
 		if (position.getY() < maxHeight){
-			velocity.setY(0.2);
+			velocity.setY(0.3);
 		} else {
 			gravity = true;
 			falling = true;
