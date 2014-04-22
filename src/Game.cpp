@@ -1,6 +1,8 @@
 #include "Game.h"
 
-bool Game::init(int w, int h){
+bool Game::init(int w, int h)
+{
+	fpsCounter.start();
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
 		cout << "SDL_Init Error: " << SDL_GetError() << endl;
 		return 1;
@@ -87,11 +89,14 @@ void Game::display(){
 	SDL_GL_SwapWindow(window);
 }
 
-void Game::loop(){
+void Game::loop()
+{
+	
 	while (running){
 		if (SDL_PollEvent(&event)){
 			if (event.type == SDL_QUIT){
 				running = false;
+				fpsCounter.stop();
 			}
 			if (event.type == SDL_KEYUP){
 				switch (event.key.keysym.sym){
@@ -111,12 +116,13 @@ void Game::loop(){
 					break;
 				}
 			}
-			
-			if (event.type == SDL_KEYDOWN){
+			if (event.type == SDL_KEYDOWN && !fpsCounter.paused()){
 				camera = Camera::getInstance().getCameraM();
 				switch (event.key.keysym.sym){
 				case SDLK_ESCAPE:
 					running = false;
+					if(fpsCounter.started())
+						fpsCounter.stop();
 					break;
 				case SDLK_LEFT:
 					player->moveX(-0.1);
@@ -133,12 +139,26 @@ void Game::loop(){
 				case SDLK_SPACE:
 					player->jump();
 					break;
+				case SDLK_p:
+					fpsCounter.pause();
+					cout << "FPS (Paused):" << (fpsCounter.fps()) <<endl;
+					break;
 				default:
 					break;
 				}
-			}
+			} else if(fpsCounter.paused()){
+				switch(event.key.keysym.sym){
+					case SDLK_i:
+						fpsCounter.resume();
+						cout << "FPS (Resumed):" << (fpsCounter.fps()) << endl;
+						break;
+					default:
+						break;
+				}
+			}		
 		}
 		display();
+		fpsCounter.fCounter();
 	}
 }
 

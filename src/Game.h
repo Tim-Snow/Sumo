@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "LevelCube.h"
 #include "Camera.h"
+#include "Timer.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ public:
 	bool init(int w, int h);
 	void loop();
 	void clean();
+	Timer fpsCounter;
 
 private:
 	vector<shared_ptr<GameObject> > objects;
@@ -32,7 +34,6 @@ private:
 	void cameraLoop();
 	void display();
 	void createLevel();
-
 	Matrix4 camera;
 	bool running;
 };
