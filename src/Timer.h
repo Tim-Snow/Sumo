@@ -2,7 +2,9 @@
 #define TIMER
 
 #include <SDL.h>
+#include <iostream>
 
+using namespace std;
 class Timer
 {
 	public:
@@ -22,17 +24,18 @@ class Timer
 		int fps();
 		//Get the ticks
 		/*Uint32*/ int gTicks();
-
+		//Constast amount of frames
+		static const int fConstant=20;
 		//Check the timer actions
 		bool started();
 		bool paused();
-
+		bool limit();
 	protected:
+		int seconds;
 		//Current frames
 		int cFrames;
 		//Average frames per second
 		int avgFrames;
-
 		//Initial Ticks
 		/*Uint32*/ int sTicks; 
 		//Stores how many ticks before the pause
