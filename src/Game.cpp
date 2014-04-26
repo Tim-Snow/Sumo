@@ -146,9 +146,9 @@ void Game::loop()
 				default:
 					break;
 				}
-			} else if(fpsCounter.paused()){
+			} else if(event.type == SDL_KEYDOWN && fpsCounter.paused()){
 				switch(event.key.keysym.sym){
-					case SDLK_i:
+					case SDLK_p:
 						fpsCounter.resume();
 						cout << "FPS (Resumed):" << (fpsCounter.fps()) << endl;
 						break;
