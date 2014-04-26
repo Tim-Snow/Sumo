@@ -44,10 +44,20 @@ void Timer::resume()
 		pTicks = 0;
 	}
 }
-/*int Timer::gTicks()
+int Timer::gTicks()
 {
-	
-}*/
+	if(tStarted)
+	{
+		if(tPaused){
+			cout<<pTicks<<endl;
+			return pTicks;
+		}	else   {
+			cout<<sTicks<<endl;
+			return seconds = SDL_GetTicks() - sTicks;
+		}
+	}
+	return 0;
+}
 bool Timer::paused()
 {
 	return tPaused && tStarted;
@@ -60,19 +70,18 @@ int Timer::fCounter()
 {
 	return cFrames++;
 }
+bool Timer::limit()
+{
+	return true;
+}
 int Timer::fps()
 {
-	float seconds = 0;
-	if(tStarted)
+	avgFrames = 1/seconds;
+	if(avgFrames > 60 )
 	{
-		if(tPaused){
-			return pTicks;
-		}	else   {
-			 return seconds = SDL_GetTicks() - sTicks;
-		}
-		avgFrames = cFrames/seconds;
-	if(avgFrames > 300000)
+		cout<<avgFrames<<endl;
 		return avgFrames = 0;
+	} else {
+	    return avgFrames = 60;
 	}
-	return 0;
 }
