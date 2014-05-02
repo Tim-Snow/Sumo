@@ -23,8 +23,10 @@ bool Game::init(int w, int h)
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	player = shared_ptr<Player>(new Player(3, 5, 3)); //x offset, height, y/z offset
+	player = shared_ptr<Player>(new Player(3, 5, 3));
 	objects.push_back(player);
+	player2 = shared_ptr<Player>(new Player(8, 5, 3));//x offset, height, y/z offset
+	objects.push_back(player2);
 
 	createLevel();
 
@@ -41,13 +43,11 @@ void Game::createLevel(){
 			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 0, i)));
 		}
 	}
-
 	for (int i = 2; i < 8; i++){
 		for (int j = 2; j < 8; j++){
 			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 1, i)));
 		}
 	}
-
 	for (int i = 3; i < 7; i++){
 		for (int j = 3; j < 7; j++){
 			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 2, i)));
@@ -72,26 +72,32 @@ void Game::display(){
 		it->update();
 	}
 	for (auto it : objects) {
-		if ((it != player) && it->collidesWith(*player)) {
+		if ((it != player) && it->collidesWithWall(*player)){
+			player->moveBack();
+		}
+		if ((it != player) && it->collidesWith(*player)){
 			player->landed(); //resets jump variables to allow another jump
 			player->noGravity();
 		}
-
-		if ((it != player) && it->collidesWithWall(*player)) {
-			player->moveBack(); 
+	}
+	for (auto it : objects) {
+		if((it != player2) && it->collidesWith(*player2)){
+			player2->moveBack();
+		}
+		if((it != player2) && it->collidesWith(*player2)){
+			player2->landed();
+			player2->noGravity();
 		}
 	}
-
+	
 	for (auto it : objects) {
 		it->draw();
 	}
-
 	SDL_GL_SwapWindow(window);
 }
 
 void Game::loop()
-{
-	
+{	
 	while (running){
 		if (SDL_PollEvent(&event)){
 			if (event.type == SDL_QUIT){
@@ -101,15 +107,27 @@ void Game::loop()
 			if (event.type == SDL_KEYUP){
 				switch (event.key.keysym.sym){
 				case SDLK_LEFT:
-					player->moveX(0);
+					player2->moveX(0);
 					break;
 				case SDLK_RIGHT:
-					player->moveX(0);
+					player2->moveX(0);
 					break;
 				case SDLK_UP:
-					player->moveZ(0);
+					player2->moveZ(0);
 					break;
 				case SDLK_DOWN:
+					player2->moveZ(0);
+					break;
+				case SDLK_a:
+					player->moveX(0);
+					break;
+				case SDLK_d:
+					player->moveX(0);
+					break;
+				case SDLK_w:
+					player->moveZ(0);
+					break;
+				case SDLK_s:
 					player->moveZ(0);
 					break;
 				default:
@@ -124,24 +142,38 @@ void Game::loop()
 					if(fpsCounter.started())
 						fpsCounter.stop();
 					break;
+				case SDLK_PERIOD:
+					player2->jump();
+					break;
 				case SDLK_LEFT:
-					player->moveX(-0.1);
+					player2->moveX(-0.1);
 					break;
 				case SDLK_RIGHT:
-					player->moveX(0.1);
+					player2->moveX(0.1);
 					break;
 				case SDLK_UP:
-					player->moveZ(0.1);
+					player2->moveZ(0.1);
 					break;
 				case SDLK_DOWN:
-					player->moveZ(-0.1);
+					player2->moveZ(-0.1);
 					break;
 				case SDLK_SPACE:
 					player->jump();
 					break;
+				case SDLK_a:
+					player->moveX(-0.1);
+					break;
+				case SDLK_d:
+					player->moveX(0.1);
+					break;
+				case SDLK_w:
+					player->moveZ(0.1);
+					break;
+				case SDLK_s:
+					player->moveZ(-0.1);
+					break;
 				case SDLK_p:
 					fpsCounter.pause();
-					cout << "FPS (Paused):" << (fpsCounter.fps()) <<endl;
 					break;
 				default:
 					break;
@@ -150,7 +182,6 @@ void Game::loop()
 				switch(event.key.keysym.sym){
 					case SDLK_p:
 						fpsCounter.resume();
-						cout << "FPS (Resumed):" << (fpsCounter.fps()) << endl;
 						break;
 					default:
 						break;
