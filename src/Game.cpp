@@ -98,9 +98,11 @@ void Game::update(){
 		if ((it = player) && it->collidesWith(*player2) && !it->collidesWithWall(*player2)){
 			if (player->getHeight() > player2->getHeight()){
 				cout << "p1 win" << endl;
+				gStates = WIN_P1;
 			}
 			else {
 				cout << "p2 win" << endl;
+				gStates = WIN_P2;
 			}
 		}
 	}
@@ -108,38 +110,48 @@ void Game::update(){
 
 void Game::loop(){
 	while (running){
-		if (SDL_PollEvent(&event)){
-			if (event.type == SDL_QUIT){
-				running = false;
+		gStates = START;
+		switch (gStates)
+		{
+		case START:
+			if(SDL_PollEvent(&event)) {
+				if (event.type = SDL_KEYDOWN)
+				{
+					gStates = PLAY;
+					cout<<"Start"<<endl;
+				}
 			}
-			if (event.type == SDL_KEYUP){
-				switch (event.key.keysym.sym){
-				case SDLK_LEFT:
-					player2->moveX(0);
-					break;
-				case SDLK_RIGHT:
-					player2->moveX(0);
-					break;
-				case SDLK_UP:
-					player2->moveZ(0);
-					break;
-				case SDLK_DOWN:
-					player2->moveZ(0);
-					break;
-				case SDLK_a:
-					player->moveX(0);
-					break;
-				case SDLK_d:
-					player->moveX(0);
-					break;
-				case SDLK_w:
-					player->moveZ(0);
-					break;
-				case SDLK_s:
-					player->moveZ(0);
-					break;
-				default:
-					break;
+			break;
+		case PLAY:
+			if (SDL_PollEvent(&event)){
+				if (event.type == SDL_KEYUP){
+					switch (event.key.keysym.sym){
+					case SDLK_LEFT:
+						player2->moveX(0);
+						break;
+					case SDLK_RIGHT:
+						player2->moveX(0);
+						break;
+					case SDLK_UP:
+						player2->moveZ(0);
+						break;
+					case SDLK_DOWN:
+						player2->moveZ(0);
+						break;
+					case SDLK_a:
+						player->moveX(0);
+						break;
+					case SDLK_d:
+						player->moveX(0);
+						break;
+					case SDLK_w:
+						player->moveZ(0);
+						break;
+					case SDLK_s:
+						player->moveZ(0);
+						break;
+					default:
+						break;
 				}
 			}
 			if (event.type == SDL_KEYDOWN){
@@ -178,14 +190,42 @@ void Game::loop(){
 				case SDLK_s:
 					player->moveZ(-0.1);
 					break;
+				case SDLK_p:
+					gStates = PAUSE;
+					break;
 				default:
 					break;
 				}
 			}
+			update();
+			display();
+			break;
+		//Pause state
+		case PAUSE:
+			if(event.type == SDL_KEYDOWN) 
+			switch (event.key.keysym.sym)
+				{
+				case SDLK_p:
+					gStates = RESUME;
+					break;
+				default:
+					break;
+				}
+			break;
+		//Resume
+		case RESUME:
+			gStates = PLAY;
+			break;
+		//Player 1 wins
+		case WIN_P1:
+			break;
+		//Player 2 wins
+		case WIN_P2:
+			break;
+		default:
+			break;
+			}		
 		}
-		update();
-		display();
 	}
 }
-
 void Game::clean(){}

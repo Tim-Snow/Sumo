@@ -14,6 +14,11 @@
 
 using namespace std;
 
+enum State
+{
+	Start, Play ,Pause, Resume, Win_p1, Win_p2
+};
+
 #ifndef GAME_H_
 #define GAME_H_
 
@@ -37,6 +42,8 @@ private:
 	void createLevel();
 
 	Matrix4 camera;
+	State gStates;
+
 	bool running;
 };
 
