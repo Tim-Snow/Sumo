@@ -25,14 +25,13 @@ public:
 
 private:
 	vector<shared_ptr<GameObject> > objects;
-	static Uint32 display(Uint32 interval, void* param);
 
 	SDL_Window* window;
 	SDL_GLContext context;
 	SDL_Event event;
 	shared_ptr<Player> player;
 	shared_ptr<Player> player2;
-	
+
 	void display();
 	void update();
 	void createLevel();

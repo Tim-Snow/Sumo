@@ -2,18 +2,34 @@
 
 GameObject::GameObject(){
 	bbox = shared_ptr<BoundingBox>(new BoundingBox(Point3(0, 0, 0), 1.0, 1.0, 1.0));
+	image[0] = SDL_LoadBMP("res/level_texture.bmp");
+	image[1] = SDL_LoadBMP("res/level_texture2.bmp");
+	image[2] = SDL_LoadBMP("res/player_texture.bmp");
 }
 
-GameObject::~GameObject(){}
+GameObject::~GameObject(){
+	glDeleteBuffers(1, &vertexBuffer);
+	glDeleteBuffers(1, &indexBuffer);
+	glDeleteBuffers(1, &colourBuffer);
+	glDeleteTextures(1, &texture);
+	glDeleteProgram(program);
+
+	delete Vertices;
+	delete Indexes;
+	delete Colours;
+
+	for (auto i : image){
+		SDL_FreeSurface(i);
+	}
+}
 
 void GameObject::compileShaders(){
-	initTextures();
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 	//get shader src
-	vertShaderStr = ReadFile("vshader.v");
-	fragShaderStr = ReadFile("fshader.f");
+	vertShaderStr = ReadFile("shaders/vshader.v");
+	fragShaderStr = ReadFile("shaders/fshader.f");
 
 	const char* vertShaderSrc = vertShaderStr.c_str();
 	const char* fragShaderSrc = fragShaderStr.c_str();
@@ -65,9 +81,11 @@ void GameObject::draw(){
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glEnableVertexAttribArray(position_attrib);
-	glEnableVertexAttribArray(texture_attrib);
 	glVertexAttribPointer(position_attrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+	glEnableVertexAttribArray(texture_attrib);
 	glVertexAttribPointer(texture_attrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12);
+
 	glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
 	glEnableVertexAttribArray(colour_attrib);
 	glVertexAttribPointer(colour_attrib, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -124,10 +142,4 @@ void GameObject::makeResources(){
 	position_attrib = glGetAttribLocation(program, "position");
 	colour_attrib = glGetAttribLocation(program, "colour");
 	tx_uniform = glGetUniformLocation(program, "tx");
-}
-
-void GameObject::initTextures(){
-	image[0] = SDL_LoadBMP("empty.bmp");
-	image[1] = SDL_LoadBMP("level_texture.bmp");
-	image[2] = SDL_LoadBMP("player_texture.bmp");
 }

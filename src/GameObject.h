@@ -93,7 +93,6 @@ protected:
 
 	void compileShaders();
 	void makeResources();
-	void initTextures();
 	void bindTextures(int textureID, char * uniformName);
 
 	int num_triangles, num_vertices;

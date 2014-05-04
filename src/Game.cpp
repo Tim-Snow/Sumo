@@ -21,9 +21,9 @@ bool Game::init(int w, int h){
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	player = shared_ptr<Player>(new Player(3, 5, 3)); //x offset, height, y/z offset
+	player = shared_ptr<Player>(new Player(3, 5, 3, 1)); //x offset, height, y/z offset, player number
 	objects.push_back(player);
-	player2 = shared_ptr<Player>(new Player(8, 5, 3));//x offset, height, y/z offset
+	player2 = shared_ptr<Player>(new Player(8, 5, 3, 2));
 	objects.push_back(player2);
 
 	createLevel();
@@ -56,16 +56,6 @@ void Game::createLevel(){
 	objects.push_back(shared_ptr<LevelCube>(new LevelCube(5, 3, 5)));
 	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 3, 5)));
 
-}
-
-Uint32 Game::display(Uint32 interval, void *param) {
-	SDL_Event event;
-	event.type = SDL_USEREVENT;
-	event.user.code = RUN_GRAPHICS_DISPLAY;
-	event.user.data1 = 0;
-	event.user.data2 = 0;
-	SDL_PushEvent(&event);
-	return (interval);
 }
 
 void Game::display(){
@@ -117,21 +107,10 @@ void Game::update(){
 }
 
 void Game::loop(){
-	Uint32 avgFrames = 1000/60;
-	SDL_AddTimer(avgFrames, display, NULL);
 	while (running){
-
-		if (SDL_WaitEvent(&event)){
-			switch (event.type)
-			{
-			case SDL_QUIT:
-					running = false;
-					break;
-				case SDL_USEREVENT:
-					display();
-					break;
-				default:
-				break;
+		if (SDL_PollEvent(&event)){
+			if (event.type == SDL_QUIT){
+				running = false;
 			}
 			if (event.type == SDL_KEYUP){
 				switch (event.key.keysym.sym){

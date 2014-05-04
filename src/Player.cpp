@@ -1,12 +1,13 @@
 #include "Player.h"
 
 Player::Player(){
-	Player(0, 0, 0);
+	Player(0, 0, 0, 1);
 }
 
-Player::Player(float x, float y, float z){
+Player::Player(float x, float y, float z, int i){
 	num_triangles = 12;
 	num_vertices = 8;
+	pNum = i;
 
 	jumping = falling = false;
 	gravity = true;
@@ -31,15 +32,28 @@ int Player::getHeight(){
 }
 
 void Player::buildColourArray(){
-	Colours[0] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
-	Colours[1] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
-	Colours[2] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
-	Colours[3] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
+	if (pNum == 1){
+		Colours[0] = RGBA(0.0f, 0.4f, 0.6f, 1.0f);
+		Colours[1] = RGBA(0.0f, 0.4f, 0.6f, 1.0f);
+		Colours[2] = RGBA(0.0f, 0.4f, 0.6f, 1.0f);
+		Colours[3] = RGBA(0.0f, 0.4f, 0.6f, 1.0f);
 
-	Colours[4] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
-	Colours[5] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
-	Colours[6] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
-	Colours[7] = RGBA(1.0f, 1.0f, 0.0f, 1.0f);
+		Colours[4] = RGBA(0.0f, 0.4f, 0.6f, 1.0f);
+		Colours[5] = RGBA(0.0f, 0.4f, 0.6f, 1.0f);
+		Colours[6] = RGBA(0.0f, 0.4f, 0.6f, 1.0f);
+		Colours[7] = RGBA(0.0f, 0.4f, 0.6f, 1.0f);
+	}
+	else {
+		Colours[0] = RGBA(0.0f, 0.6f, 0.4f, 1.0f);
+		Colours[1] = RGBA(0.0f, 0.6f, 0.4f, 1.0f);
+		Colours[2] = RGBA(0.0f, 0.6f, 0.4f, 1.0f);
+		Colours[3] = RGBA(0.0f, 0.6f, 0.4f, 1.0f);
+
+		Colours[4] = RGBA(0.0f, 0.6f, 0.4f, 1.0f);
+		Colours[5] = RGBA(0.0f, 0.6f, 0.4f, 1.0f);
+		Colours[6] = RGBA(0.0f, 0.6f, 0.4f, 1.0f);
+		Colours[7] = RGBA(0.0f, 0.6f, 0.4f, 1.0f);
+	}
 }
 
 void Player::jump(){

@@ -6,10 +6,9 @@
 class Player : public CubeObject{
 public:
 	Player();
-	Player(float x, float y, float z);
+	Player(float x, float y, float z, int i);
 
 	int getHeight();
-
 	void jump();
 	void landed();
 	void noGravity();
@@ -23,6 +22,7 @@ public:
 	virtual void draw();
 protected:
 private:
+	int pNum;
 	Point3 position, newPosition;
 	Vector3 velocity;
 	bool falling, gravity, jumping;
