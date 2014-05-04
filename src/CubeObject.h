@@ -1,5 +1,6 @@
 #include "GameObject.h"
-
+/* This object contains the properties for a basic cube vertexes and colours
+*/
 #ifndef CUBEOBJECT_H_
 #define CUBEOBJECT_H_
 

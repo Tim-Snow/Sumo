@@ -40,7 +40,7 @@ void GameObject::compileShaders(){
 	GLint vShaderok;
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vShaderok);
 	if (!vShaderok) {
-		cerr << "Failed to compile vertexShader" << " with error code " << vShaderok << endl;
+		cerr << "Failed to compile vertexShader with error code " << vShaderok << endl;
 		glDeleteShader(vertexShader);
 	}
 
@@ -50,7 +50,7 @@ void GameObject::compileShaders(){
 	GLint fShaderok;
 	glGetShaderiv(fragShader, GL_COMPILE_STATUS, &fShaderok);
 	if (!fShaderok) {
-		cerr << "Failed to compile vertexShader" << " with error code " << fShaderok << endl;
+		cerr << "Failed to compile fragShader with error code " << fShaderok << endl;
 		glDeleteShader(fragShader);
 	}
 	//link the program
@@ -94,7 +94,6 @@ void GameObject::draw(){
 
 	glDisableVertexAttribArray(texture_attrib);
 	glDisableVertexAttribArray(colour_attrib);
-	glDisableVertexAttribArray(position_attrib);
 	glDisableVertexAttribArray(tx_uniform);
 }
 

@@ -8,19 +8,18 @@
 #include "CubeObject.h"
 #include "GameObject.h"
 #include "LevelCube.h"
+#include "LevelCube2.h"
+#include "MenuCube.h"
 #include "Camera.h"
 
-#define RUN_GRAPHICS_DISPLAY 0x00;
-
 using namespace std;
-
-enum State
-{
-	Start, Play ,Pause, Resume, Win_p1, Win_p2
-};
-
+/*The game file creates the window, inits SDL, contains the main loop and calls the update and render of every game object
+key inputs are also contained in this class, as well as reading in of some textures
+*/
 #ifndef GAME_H_
 #define GAME_H_
+
+enum State {START, PLAY, PAUSE, WIN1, WIN2};
 
 class Game{
 public:
@@ -36,14 +35,16 @@ private:
 	SDL_Event event;
 	shared_ptr<Player> player;
 	shared_ptr<Player> player2;
+	shared_ptr<MenuCube> menu;
+	shared_ptr<MenuCube> p1win;
+	shared_ptr<MenuCube> p2win;
+	State gStates;
 
 	void display();
 	void update();
 	void createLevel();
 
 	Matrix4 camera;
-	State gStates;
-
 	bool running;
 };
 

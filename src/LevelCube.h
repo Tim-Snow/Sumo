@@ -2,7 +2,7 @@
 
 #ifndef LEVELCUBE_H_
 #define LEVELCUBE_H_
-
+/* Similar to cube object however has texture information */
 class LevelCube : public CubeObject{
 public:
 	LevelCube();

@@ -17,48 +17,57 @@ bool Game::init(int w, int h){
 	}
 
 	running = true;
-
+	gStates = START;
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	player = shared_ptr<Player>(new Player(3, 5, 3, 1)); //x offset, height, y/z offset, player number
+	p1win = shared_ptr<MenuCube>(new MenuCube(5, 4.5, -6, 1));
+	p2win = shared_ptr<MenuCube>(new MenuCube(5, 4.5, -6, 2));
+	menu = shared_ptr<MenuCube>(new MenuCube(5, 4.5, -6, 0));
+
+	player = shared_ptr<Player>(new Player(2, 3, 2, 1)); //x offset, height, y/z offset, player number
 	objects.push_back(player);
-	player2 = shared_ptr<Player>(new Player(8, 5, 3, 2));
+	player2 = shared_ptr<Player>(new Player(8, 3, 2, 2));
 	objects.push_back(player2);
 
 	createLevel();
 
 	camera = Camera::getInstance().getCameraM();
-	Camera::getInstance().lookAt(Point3(1.0, 0.0, 0.0), Point3(-15.0, -5.0, -15.0), Vector3(0.0, 1.0, 0.0));
-	Camera::getInstance().setCamera(camera * Matrix4::translation(Vector3(-4.5, -3.5, 6.0)));
+	Camera::getInstance().lookAt(Point3(45.0, 0.0, 0.0), Point3(5.0, 5.0, 5.0), Vector3(0.0, 1.0, 0.0));
+	Camera::getInstance().setCamera(camera * Matrix4::translation(Vector3(-5.0, -4.5, 7.3)));
 	display();
 	return 0;
 }
 
 void Game::createLevel(){
-	for (int i = 0; i < 10; i++){
-		for (int j = 0; j < 10; j++){
+	for (int i = 0; i < 11; i++){
+		for (int j = 0; j < 11; j++){
 			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 0, i)));
 		}
 	}
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(6, 3, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(5, 3, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(4, 3, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(7, 2, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(3, 2, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(8, 1, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(2, 1, 5)));
 
-	for (int i = 2; i < 8; i++){
-		for (int j = 2; j < 8; j++){
-			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 1, i)));
-		}
-	}
-
-	for (int i = 3; i < 7; i++){
-		for (int j = 3; j < 7; j++){
-			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 2, i)));
-		}
-	}
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(5, 3, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 3, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(6, 3, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(5, 3, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(4, 3, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(7, 2, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(3, 2, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(8, 1, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(2, 1, 4)));
 
 }
 
 void Game::display(){
+	if (gStates == START){
+		objects.push_back(menu);
+	}
+
 	glClearColor(0.35f, 0.8f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -98,11 +107,11 @@ void Game::update(){
 		if ((it = player) && it->collidesWith(*player2) && !it->collidesWithWall(*player2)){
 			if (player->getHeight() > player2->getHeight()){
 				cout << "p1 win" << endl;
-				gStates = WIN_P1;
+				gStates = WIN1;
 			}
 			else {
 				cout << "p2 win" << endl;
-				gStates = WIN_P2;
+				gStates = WIN2;
 			}
 		}
 	}
@@ -110,20 +119,26 @@ void Game::update(){
 
 void Game::loop(){
 	while (running){
-		gStates = START;
-		switch (gStates)
-		{
-		case START:
-			if(SDL_PollEvent(&event)) {
-				if (event.type = SDL_KEYDOWN)
-				{
-					gStates = PLAY;
-					cout<<"Start"<<endl;
-				}
+		if (SDL_PollEvent(&event)) {
+			if (event.type == SDL_QUIT){
+				running = false;
 			}
+			switch (gStates) {
+			case START:
+				if (event.type = SDL_KEYDOWN){
+					switch (event.key.keysym.sym){
+					case SDLK_SPACE:
+						gStates = PLAY;
+						objects.pop_back();
+						cout << "Start" << endl;
+						break;
+					default:
+						break;
+					}
+				}
 			break;
-		case PLAY:
-			if (SDL_PollEvent(&event)){
+
+			case PLAY:
 				if (event.type == SDL_KEYUP){
 					switch (event.key.keysym.sym){
 					case SDLK_LEFT:
@@ -152,80 +167,85 @@ void Game::loop(){
 						break;
 					default:
 						break;
+					}
 				}
-			}
+				if (event.type == SDL_KEYDOWN){
+					switch (event.key.keysym.sym){
+					case SDLK_ESCAPE:
+						running = false;
+						break;
+					case SDLK_PERIOD:
+						player2->jump();
+						break;
+					case SDLK_LEFT:
+						player2->moveX(-0.1);
+						break;
+					case SDLK_RIGHT:
+						player2->moveX(0.1);
+						break;
+					case SDLK_UP:
+						player2->moveZ(0.1);
+						break;
+					case SDLK_DOWN:
+						player2->moveZ(-0.1);
+						break;
+					case SDLK_SPACE:
+						player->jump();
+						break;
+					case SDLK_a:
+						player->moveX(-0.1);
+						break;
+					case SDLK_d:
+						player->moveX(0.1);
+						break;
+					case SDLK_w:
+						player->moveZ(0.1);
+						break;
+					case SDLK_s:
+						player->moveZ(-0.1);
+						break;
+					case SDLK_p:
+						gStates = PAUSE;
+						break;
+					default:
+						break;
+					}
+				}
+				break;
+				//Pause state
+		case PAUSE:
 			if (event.type == SDL_KEYDOWN){
-				camera = Camera::getInstance().getCameraM();
 				switch (event.key.keysym.sym){
-				case SDLK_ESCAPE:
-					running = false;
-					break;
-				case SDLK_PERIOD:
-					player2->jump();
-					break;
-				case SDLK_LEFT:
-					player2->moveX(-0.1);
-					break;
-				case SDLK_RIGHT:
-					player2->moveX(0.1);
-					break;
-				case SDLK_UP:
-					player2->moveZ(0.1);
-					break;
-				case SDLK_DOWN:
-					player2->moveZ(-0.1);
-					break;
-				case SDLK_SPACE:
-					player->jump();
-					break;
-				case SDLK_a:
-					player->moveX(-0.1);
-					break;
-				case SDLK_d:
-					player->moveX(0.1);
-					break;
-				case SDLK_w:
-					player->moveZ(0.1);
-					break;
-				case SDLK_s:
-					player->moveZ(-0.1);
-					break;
 				case SDLK_p:
-					gStates = PAUSE;
+					gStates = PLAY;
 					break;
 				default:
 					break;
 				}
+				break;
 			}
+			//Player 1 wins
+		case WIN1:
+			objects.push_back(p1win);
 			update();
 			display();
 			break;
-		//Pause state
-		case PAUSE:
-			if(event.type == SDL_KEYDOWN) 
-			switch (event.key.keysym.sym)
-				{
-				case SDLK_p:
-					gStates = RESUME;
-					break;
-				default:
-					break;
-				}
-			break;
-		//Resume
-		case RESUME:
-			gStates = PLAY;
-			break;
-		//Player 1 wins
-		case WIN_P1:
-			break;
-		//Player 2 wins
-		case WIN_P2:
+			
+			//Player 2 wins
+		case WIN2:
+			objects.push_back(p2win);
+			update();
+			display();
 			break;
 		default:
 			break;
-			}		
+			}
+		}
+		if (gStates == PLAY){
+			update();
+			display();
 		}
 	}
 }
+
 void Game::clean(){}

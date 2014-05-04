@@ -10,7 +10,9 @@
 
 #ifndef GAMEOBJECT_H_
 #define GAMEOBJECT_H_
-
+/*GameObject is the basic cube that all other cubes inherit from
+it also contains a few structs for vectors and also vertex struct which contains texture information
+*/
 using namespace std;
 using namespace Vectormath::Aos;
 
