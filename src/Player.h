@@ -8,6 +8,8 @@ public:
 	Player();
 	Player(float x, float y, float z);
 
+	int getHeight();
+
 	void jump();
 	void landed();
 	void noGravity();

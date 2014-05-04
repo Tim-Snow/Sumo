@@ -1,8 +1,10 @@
 #version 330
 
-smooth in vec4 theColour;
-out vec4 outputColour;
+in vec4 theColour;
+in vec2 theTexture; 
+
+uniform sampler2D texture;
 void main()
 {
-	outputColour = theColour;
+	gl_FragColor = texture2D(texture, theTexture.st * vec2(1.0, -1.0))* theColour;
 }

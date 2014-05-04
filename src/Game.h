@@ -28,9 +28,10 @@ private:
 	SDL_GLContext context;
 	SDL_Event event;
 	shared_ptr<Player> player;
+	shared_ptr<Player> player2;
 
-	void cameraLoop();
 	void display();
+	void update();
 	void createLevel();
 
 	Matrix4 camera;

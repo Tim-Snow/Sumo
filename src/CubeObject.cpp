@@ -17,12 +17,10 @@ CubeObject::CubeObject(float x, float y, float z){
 
 	bbox.reset();
 	bbox = shared_ptr<BoundingBox>(new BoundingBox(Point3(x, y, z), 1.0, 1.0, 1.0));
-
 	makeResources();
 }
 
 void CubeObject::buildColourArray(){
-
 	Colours[0] = RGBA(0.0f, 0.0f, 0.0f, 1.0f);
 	Colours[1] = RGBA(0.0f, 0.0f, 0.0f, 1.0f);
 	Colours[2] = RGBA(1.0f, 1.0f, 1.0f, 1.0f);
@@ -35,15 +33,15 @@ void CubeObject::buildColourArray(){
 }
 
 void CubeObject::buildBufferArrays(){
-	Vertices[0] = Vertex(Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, 0.0f, 0.0f));
-	Vertices[1] = Vertex(Vector3f(0.5f, -0.5f, 0.5f), Vector3f(1.0f, 0.0f, 0.0f));
-	Vertices[2] = Vertex(Vector3f(0.5f, 0.5f, 0.5f), Vector3f(1.0f, 1.0f, 0.0f));
-	Vertices[3] = Vertex(Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(0.0f, 1.0f, 0.0f));
+	Vertices[0] = Vertex(Vector3f(-0.5f, -0.5f, 0.5f), Vector2f(0.0f, 0.0f));
+	Vertices[1] = Vertex(Vector3f(0.5f, -0.5f, 0.5f), Vector2f(1.0f, 0.0f));
+	Vertices[2] = Vertex(Vector3f(0.5f, 0.5f, 0.5f), Vector2f(1.0f, 1.0f));
+	Vertices[3] = Vertex(Vector3f(-0.5f, 0.5f, 0.5f), Vector2f(0.0f, 1.0));
 
-	Vertices[4] = Vertex(Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(0.0f, 0.0f, 1.0f));
-	Vertices[5] = Vertex(Vector3f(0.5f, -0.5f, -0.5f), Vector3f(1.0f, 0.0f, 1.0f));
-	Vertices[6] = Vertex(Vector3f(0.5f, 0.5f, -0.5f), Vector3f(1.0f, 1.0f, 1.0f));
-	Vertices[7] = Vertex(Vector3f(-0.5f, 0.5f, -0.5f), Vector3f(0.0f, 1.0f, 1.0f));
+	Vertices[4] = Vertex(Vector3f(-0.5f, -0.5f, -0.5f), Vector2f(0.0f, 0.0f));
+	Vertices[5] = Vertex(Vector3f(0.5f, -0.5f, -0.5f), Vector2f(1.0f, 0.0f));
+	Vertices[6] = Vertex(Vector3f(0.5f, 0.5f, -0.5f), Vector2f(1.0f, 1.0f));
+	Vertices[7] = Vertex(Vector3f(-0.5f, 0.5f, -0.5f), Vector2f(0.0f, 1.0f));
 
 	Indexes[0] = 0;	Indexes[1] = 1;	Indexes[2] = 2;
 	Indexes[3] = 2;	Indexes[4] = 3;	Indexes[5] = 0;
@@ -62,6 +60,8 @@ void CubeObject::buildBufferArrays(){
 
 	Indexes[30] = 1; Indexes[31] = 5; Indexes[32] = 6;
 	Indexes[33] = 6; Indexes[34] = 2; Indexes[35] = 1;
+
+	
 }
 
 void CubeObject::update(){

@@ -17,7 +17,6 @@ LevelCube::LevelCube(float x, float y, float z){
 
 	bbox.reset();
 	bbox = shared_ptr<BoundingBox>(new BoundingBox(Point3(x, y, z), 1.0, 1.0, 1.0));
-
 	makeResources();
 }
 

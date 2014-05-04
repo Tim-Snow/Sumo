@@ -1,11 +1,12 @@
 #version 330
 
 attribute vec3 position;
+attribute vec2 texturecoord;
 attribute vec4 colour;
 
 uniform vec4 tx;
-
-smooth out vec4 theColour;
+out vec4 theColour;
+out vec2 theTexture;
 
 mat4 view_frustum(
     float angle_of_view,
@@ -53,8 +54,8 @@ mat4 rotate_y(float theta)
 
 void main()
 {
-
     gl_Position = view_frustum(radians(45.0), 4.0/3.0, 0.1, 1000.0)
 * (tx + vec4(position.x, position.y, position.z, 1.0));
 	theColour = colour;
+	theTexture = texturecoord;
 }

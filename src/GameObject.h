@@ -67,9 +67,9 @@ struct RGBA
 };
 struct Vertex{
 	Vector3f position;
-	Vector3f texture;
+	Vector2f texture;
 	Vertex(){}
-	Vertex(Vector3f pos, Vector3f tex){
+	Vertex(Vector3f pos, Vector2f tex){
 		position = pos;
 		texture = tex;
 	}
@@ -88,19 +88,22 @@ protected:
 	Vertex * Vertices;
 	RGBA * Colours;
 	GLushort * Indexes;
-	
+	GLuint texture;
+
 	void compileShaders();
 	void makeResources();
+	void initTextures();
+	void bindTextures(int textureID, char * uniformName);
 
 	int num_triangles, num_vertices;
 
 	shared_ptr<BoundingBox> bbox;
 private:
 	string ReadFile(const char* path);
-	GLuint loadTexture(const char* path);
+
 	string vertShaderStr, fragShaderStr;
 
-	GLuint vertexBuffer, indexBuffer, colourBuffer, textureBuffer;
+	GLuint vertexBuffer, indexBuffer, colourBuffer;
 	GLuint vertexShader, fragShader, program;
 	GLint position_attrib, tx_uniform, colour_attrib, texture_attrib;
 };

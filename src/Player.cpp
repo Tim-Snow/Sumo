@@ -26,6 +26,10 @@ Player::Player(float x, float y, float z){
 	makeResources();
 }
 
+int Player::getHeight(){
+	return position.getY();
+}
+
 void Player::buildColourArray(){
 	Colours[0] = RGBA(0.0f, 0.0f, 0.0f, 1.0f);
 	Colours[1] = RGBA(0.0f, 0.0f, 0.0f, 1.0f);

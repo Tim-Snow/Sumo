@@ -116,26 +116,33 @@ void GameObject::makeResources(){
 	glGenBuffers(1, &indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLushort)* this->num_triangles, Indexes, GL_STATIC_DRAW);
-	
-	glUniform1i(texture_attrib, 0);
-	textureBuffer = loadTexture("player_texture.bmp");
 
+	initTextures();
 	compileShaders();
-	
-	texture_attrib = glGetAttribLocation(program, "texture");
+
+	texture_attrib = glGetAttribLocation(program, "texturecoord");
 	position_attrib = glGetAttribLocation(program, "position");
 	colour_attrib = glGetAttribLocation(program, "colour");
 	tx_uniform = glGetUniformLocation(program, "tx");
 }
 
-GLuint GameObject::loadTexture(const char *path){
-	GLuint texture;
-	SDL_Surface * image = SDL_LoadBMP(path);
+void GameObject::initTextures(){
+	SDL_Surface * image[3];
+	image[0] = SDL_LoadBMP("empty.bmp");
+	image[1] = SDL_LoadBMP("level_texture.bmp");
+	image[2] = SDL_LoadBMP("player_texture.bmp");
+	
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image[1]->w, image[1]->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image[1]->pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	SDL_FreeSurface(image[1]);
 
-	return texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image[2]->w, image[2]->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image[2]->pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	SDL_FreeSurface(image[2]);
 }
