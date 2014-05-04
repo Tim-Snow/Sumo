@@ -10,6 +10,8 @@
 #include "LevelCube.h"
 #include "Camera.h"
 
+#define RUN_GRAPHICS_DISPLAY 0x00;
+
 using namespace std;
 
 #ifndef GAME_H_
@@ -23,13 +25,14 @@ public:
 
 private:
 	vector<shared_ptr<GameObject> > objects;
+	static Uint32 display(Uint32 interval, void* param);
 
 	SDL_Window* window;
 	SDL_GLContext context;
 	SDL_Event event;
 	shared_ptr<Player> player;
 	shared_ptr<Player> player2;
-
+	
 	void display();
 	void update();
 	void createLevel();

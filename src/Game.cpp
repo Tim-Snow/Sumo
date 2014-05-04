@@ -58,6 +58,16 @@ void Game::createLevel(){
 
 }
 
+Uint32 Game::display(Uint32 interval, void *param) {
+	SDL_Event event;
+	event.type = SDL_USEREVENT;
+	event.user.code = RUN_GRAPHICS_DISPLAY;
+	event.user.data1 = 0;
+	event.user.data2 = 0;
+	SDL_PushEvent(&event);
+	return (interval);
+}
+
 void Game::display(){
 	glClearColor(0.35f, 0.8f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -107,10 +117,21 @@ void Game::update(){
 }
 
 void Game::loop(){
+	Uint32 avgFrames = 1000/60;
+	SDL_AddTimer(avgFrames, display, NULL);
 	while (running){
-		if (SDL_PollEvent(&event)){
-			if (event.type == SDL_QUIT){
-				running = false;
+
+		if (SDL_WaitEvent(&event)){
+			switch (event.type)
+			{
+			case SDL_QUIT:
+					running = false;
+					break;
+				case SDL_USEREVENT:
+					display();
+					break;
+				default:
+				break;
 			}
 			if (event.type == SDL_KEYUP){
 				switch (event.key.keysym.sym){
