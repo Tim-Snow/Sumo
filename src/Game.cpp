@@ -21,6 +21,10 @@ bool Game::init(int w, int h){
 	glewExperimental = GL_TRUE;
 	glewInit();
 
+	p1win = shared_ptr<MenuCube>(new MenuCube(5, 4.5, -6, 1));
+	p2win = shared_ptr<MenuCube>(new MenuCube(5, 4.5, -6, 2));
+	menu = shared_ptr<MenuCube>(new MenuCube(5, 4.5, -6, 0));
+
 	player = shared_ptr<Player>(new Player(2, 3, 2, 1)); //x offset, height, y/z offset, player number
 	objects.push_back(player);
 	player2 = shared_ptr<Player>(new Player(8, 3, 2, 2));
@@ -41,25 +45,29 @@ void Game::createLevel(){
 			objects.push_back(shared_ptr<LevelCube>(new LevelCube(j, 0, i)));
 		}
 	}
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(6, 3, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(5, 3, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 3, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(7, 2, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(3, 2, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(8, 1, 5)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(2, 1, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(6, 3, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(5, 3, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(4, 3, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(7, 2, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(3, 2, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(8, 1, 5)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(2, 1, 5)));
 
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(6, 3, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(5, 3, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(4, 3, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(7, 2, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(3, 2, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(8, 1, 4)));
-	objects.push_back(shared_ptr<LevelCube>(new LevelCube(2, 1, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(6, 3, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(5, 3, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(4, 3, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(7, 2, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(3, 2, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(8, 1, 4)));
+	objects.push_back(shared_ptr<LevelCube2>(new LevelCube2(2, 1, 4)));
 
 }
 
 void Game::display(){
+	if (gStates == START){
+		objects.push_back(menu);
+	}
+
 	glClearColor(0.35f, 0.8f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -121,6 +129,7 @@ void Game::loop(){
 					switch (event.key.keysym.sym){
 					case SDLK_SPACE:
 						gStates = PLAY;
+						objects.pop_back();
 						cout << "Start" << endl;
 						break;
 					default:
@@ -217,9 +226,16 @@ void Game::loop(){
 			}
 			//Player 1 wins
 		case WIN1:
+			objects.push_back(p1win);
+			update();
+			display();
 			break;
+			
 			//Player 2 wins
 		case WIN2:
+			objects.push_back(p2win);
+			update();
+			display();
 			break;
 		default:
 			break;

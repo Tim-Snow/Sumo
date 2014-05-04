@@ -8,9 +8,9 @@
 #include "CubeObject.h"
 #include "GameObject.h"
 #include "LevelCube.h"
+#include "LevelCube2.h"
+#include "MenuCube.h"
 #include "Camera.h"
-
-#define RUN_GRAPHICS_DISPLAY 0x00;
 
 using namespace std;
 
@@ -33,6 +33,9 @@ private:
 	SDL_Event event;
 	shared_ptr<Player> player;
 	shared_ptr<Player> player2;
+	shared_ptr<MenuCube> menu;
+	shared_ptr<MenuCube> p1win;
+	shared_ptr<MenuCube> p2win;
 	State gStates;
 
 	void display();
