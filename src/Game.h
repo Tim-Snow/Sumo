@@ -14,13 +14,10 @@
 
 using namespace std;
 
-enum State
-{
-	Start, Play ,Pause, Resume, Win_p1, Win_p2
-};
-
 #ifndef GAME_H_
 #define GAME_H_
+
+enum State {START, PLAY, PAUSE, WIN1, WIN2};
 
 class Game{
 public:
@@ -36,14 +33,13 @@ private:
 	SDL_Event event;
 	shared_ptr<Player> player;
 	shared_ptr<Player> player2;
+	State gStates;
 
 	void display();
 	void update();
 	void createLevel();
 
 	Matrix4 camera;
-	State gStates;
-
 	bool running;
 };
 
