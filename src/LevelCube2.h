@@ -1,5 +1,5 @@
 #include "CubeObject.h"
-
+/* Level cube with different texture */
 #ifndef LEVELCUBE2_H_
 #define LEVELCUBE2_H_
 

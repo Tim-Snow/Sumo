@@ -2,7 +2,8 @@
 
 #ifndef PLAYER_H_
 #define PLAYER_H_
-
+/* The most complex cube object, this object is different as it has logic to be moved with controls, jump, and change the game state (by jumping on opponents head and winning
+*/
 class Player : public CubeObject{
 public:
 	Player();

@@ -1,5 +1,5 @@
 #include "CubeObject.h"
-
+/* The start menu, and win states are displayed using a cube with relevant textures positioned in front of the camera*/
 #ifndef MENUCUBE_H_
 #define MENUCUBE_H_
 

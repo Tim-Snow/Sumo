@@ -13,7 +13,9 @@
 #include "Camera.h"
 
 using namespace std;
-
+/*The game file creates the window, inits SDL, contains the main loop and calls the update and render of every game object
+key inputs are also contained in this class, as well as reading in of some textures
+*/
 #ifndef GAME_H_
 #define GAME_H_
 

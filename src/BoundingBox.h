@@ -1,6 +1,10 @@
 #ifndef BOUNDINGBOX_H_
 #define BOUNDINGBOX_H_
+/*Bounding box creates a box to check for collision against other objects
+it is also used as the basis to move the objects, as the box is created around the center point
 
+I have separated the collision in to two separate detections, one used for walls (and puts player back in previous position), another used for the floor which has a slightly overhanging bbox to detect the floor first, this instead turns off gravity
+*/
 #include <utility>
 #include <memory>
 
