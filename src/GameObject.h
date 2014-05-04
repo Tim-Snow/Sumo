@@ -89,6 +89,7 @@ protected:
 	RGBA * Colours;
 	GLushort * Indexes;
 	GLuint texture;
+	SDL_Surface * image[3];
 
 	void compileShaders();
 	void makeResources();

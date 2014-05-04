@@ -7,7 +7,7 @@ GameObject::GameObject(){
 GameObject::~GameObject(){}
 
 void GameObject::compileShaders(){
-
+	initTextures();
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -117,7 +117,7 @@ void GameObject::makeResources(){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLushort)* this->num_triangles, Indexes, GL_STATIC_DRAW);
 
-	initTextures();
+	glGenTextures(1, &texture);
 	compileShaders();
 
 	texture_attrib = glGetAttribLocation(program, "texturecoord");
@@ -127,22 +127,7 @@ void GameObject::makeResources(){
 }
 
 void GameObject::initTextures(){
-	SDL_Surface * image[3];
 	image[0] = SDL_LoadBMP("empty.bmp");
 	image[1] = SDL_LoadBMP("level_texture.bmp");
 	image[2] = SDL_LoadBMP("player_texture.bmp");
-	
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image[1]->w, image[1]->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image[1]->pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	SDL_FreeSurface(image[1]);
-
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image[2]->w, image[2]->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image[2]->pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	SDL_FreeSurface(image[2]);
 }
